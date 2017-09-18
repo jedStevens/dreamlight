@@ -6,5 +6,7 @@ extends Node
 
 func _ready():
 	dreamlight.start()
-	
-	get_tree().change_scene("res://lobby/lobby.tscn")
+	if dreamlight.is_server():
+		get_tree().change_scene("res://lobby/lobby.tscn")
+	else:
+		get_tree().change_scene("res://main_menu/menu.tscn")

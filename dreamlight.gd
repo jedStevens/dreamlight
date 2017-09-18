@@ -1,9 +1,10 @@
 extends Node
 
-const RUN_SERVER = true
+const RUN_SERVER = false
+const PORT = 4202
 
 var _is_server = false
-var server=null
+var host=null
 var client=null
 var port = 6969
 
@@ -14,23 +15,42 @@ var tick = 0
 
 var players = []
 
+var ip = "127.0.0.1" # "dreamlight-server.herokuapp.com"
+
 func start():
 	set_process(true)
 	
 	set_fixed_process(true)
 	
-	server = create_server()
 	if OS.get_name() == "Server" or RUN_SERVER :
+		print("Starting Server Version")
 		_is_server = true
+		create_server()
+
 		
 	else:
-		var http = HTTPRequest.new()
-		http.set_download_file("res://port.txt")
-		http.request("localhost:5000/port-hint")
-		print(http.get_http_client_status())
-		
-		client  = StreamPeerTCP.new()
-		client.connect("dreamlight-server.herokuapp.com",port)
+		print("Starting Client Version")
+		get_port_hint()
+
+func get_port_hint():
+	print("Requesting port hint...")
+	var http = HTTPRequest.new()
+	add_child(http)
+	http.request("http://localhost:5000/port-hint")
+	
+	http.set_download_file("user://game.port")
+	http.connect("request_completed", self, "on_port_hint_req_complete")
+	
+	print("File should download into: ", http.get_download_file())
+
+func on_port_hint_req_complete(res,res_code,headers,body):
+	var port_file = File.new()
+	port_file.open("user://game.port", File.READ)
+	
+	port = int(port_file.get_as_text())
+	print("Got port: ", port)
+	port_file.close()
+	
 
 func create_server():
 	# We have to write to game.port
@@ -38,16 +58,19 @@ func create_server():
 	# have to pass it on through the server
 	var game_port = get_valid_port()
 	
-	var host = NetworkedMultiplayerENet.new()
+	host = NetworkedMultiplayerENet.new()
 	host.create_server(game_port, 4)
 	get_tree().set_network_peer(host)
-	
-	return host
+
+func create_client():
+	var host = NetworkedMultiplayerENet.new()
+	host.create_client("dreamlight-server.herokuapp.com", PORT)
+	get_tree().set_network_peer(host)
 
 func get_valid_port():
-	port = 4000
-	# should test if port is in use
-	# also should manage it better
+	var port_file = File.new()
+	port_file.open("game.port", File.READ)
+	port = int(port_file.get_as_text())
 	return port
 
 func _process(delta):
