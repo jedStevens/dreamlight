@@ -6,27 +6,15 @@
 
 bake_interval = 5.0
 _data = {
-"points": Vector2Array( 0, 0, 341.455, -2.72076, -1.97777, -234.245, 1.36038, -148.281, -2.72076, 141.479, 510.682, 2.97754, 208.138, -2.72076, -346.896, 0, 1.90057, 228.8, 0, 138.759, 1.36038, -201.336, -512.322, 1.61713, -113.445, 3.98054, 0, 0, -2.64119, -234.245 )
+"points": Vector2Array( 0, 0, -31.5035, -34.3675, -518.473, -3.77686, -489.736, 20.0477, 400.954, 7.15989, -0.520569, -301.891, -10.0238, -93.0785, -661.573, 389.498, 510.084, -1.8288, 0, 0, 0, 0, -518.473, -3.77686 )
 }
 
 [node name="Node2D" type="Node2D"]
-
-[node name="moon_path" type="Path2D" parent="."]
-
-curve = SubResource( 1 )
-
-[node name="moon" parent="moon_path" instance=ExtResource( 1 )]
-
-transform/pos = Vector2( -1.97777, -234.245 )
-transform/rot = 0.391522
-transform/scale = Vector2( 1, 1 )
-rotate = false
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
 transform/pos = Vector2( -4.36937, -40.52 )
 transform/rot = 0.391522
-transform/scale = Vector2( 1, 1 )
 anchor_mode = 1
 rotating = false
 current = true
@@ -43,5 +31,15 @@ drag_margin/left = 0.2
 drag_margin/top = 0.2
 drag_margin/right = 0.2
 drag_margin/bottom = 0.2
+
+[node name="Path2D" type="Path2D" parent="."]
+
+curve = SubResource( 1 )
+
+[node name="moon" parent="Path2D" instance=ExtResource( 1 )]
+
+transform/pos = Vector2( -518.473, -3.77686 )
+transform/rot = 125.517
+rotate = false
 
 

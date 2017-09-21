@@ -14,4 +14,4 @@ func _ready():
 	set_process(true)
 func _process(delta):
 	accum += delta
-	set_offset(get_offset() + delta * 25)
+	set_offset(get_offset() + delta * 5)
